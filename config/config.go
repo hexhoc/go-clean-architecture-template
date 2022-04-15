@@ -9,6 +9,7 @@ type (
 	Config struct {
 		App  App
 		HTTP HTTP
+		Log  Log
 	}
 
 	App struct {
@@ -19,6 +20,10 @@ type (
 	HTTP struct {
 		Port    string
 		Version string
+	}
+
+	Log struct {
+		Level string
 	}
 )
 
@@ -41,6 +46,10 @@ func NewConfig() (*Config, error) {
 	cfg.HTTP = HTTP{
 		viper.GetString("http.port"),
 		viper.GetString("http.version"),
+	}
+
+	cfg.Log = Log{
+		viper.GetString("logger.log_level"),
 	}
 
 	return cfg, nil

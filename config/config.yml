@@ -5,3 +5,7 @@ app:
 http:
   port: '8080'
   version: '1'
+
+logger:
+  log_level: 'debug'
+  rollbar_env: 'go-clean-template'

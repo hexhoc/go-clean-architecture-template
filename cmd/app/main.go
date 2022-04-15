@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"github.com/hexhoc/go-mall-api/config"
+	"github.com/hexhoc/go-mall-api/internal/app"
 	"log"
 )
 
@@ -13,7 +13,6 @@ func main() {
 		log.Fatalf("Config error: %s", err)
 	}
 
-	fmt.Println(cfg.HTTP.Version, cfg.App.Version)
 	// Run
-	//app.Run(cfg)
+	app.Run(cfg)
 }
