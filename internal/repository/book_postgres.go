@@ -6,20 +6,20 @@ import (
 	"time"
 )
 
-//BookMySQL mysql repo
-type BookMySQL struct {
+//BookPostgres mysql repo
+type BookPostgres struct {
 	db *sql.DB
 }
 
-//NewBookMySQL create new repository
-func NewBookMySQL(db *sql.DB) *BookMySQL {
-	return &BookMySQL{
+//NewBookPostgres create new repository
+func NewBookPostgres(db *sql.DB) *BookPostgres {
+	return &BookPostgres{
 		db: db,
 	}
 }
 
 //Create a book
-func (r *BookMySQL) Create(e *entity.Book) (entity.ID, error) {
+func (r *BookPostgres) Create(e *entity.Book) (entity.ID, error) {
 	stmt, err := r.db.Prepare(`
 		insert into book (id, title, author, pages, quantity, created_at) 
 		values(?,?,?,?,?,?)`)
@@ -45,7 +45,7 @@ func (r *BookMySQL) Create(e *entity.Book) (entity.ID, error) {
 }
 
 //Get a book
-func (r *BookMySQL) Get(id entity.ID) (*entity.Book, error) {
+func (r *BookPostgres) Get(id entity.ID) (*entity.Book, error) {
 	stmt, err := r.db.Prepare(`select id, title, author, pages, quantity, created_at from book where id = ?`)
 	if err != nil {
 		return nil, err
@@ -62,7 +62,7 @@ func (r *BookMySQL) Get(id entity.ID) (*entity.Book, error) {
 }
 
 //Update a book
-func (r *BookMySQL) Update(e *entity.Book) error {
+func (r *BookPostgres) Update(e *entity.Book) error {
 	e.UpdatedAt = time.Now()
 	_, err := r.db.Exec("update book set title = ?, author = ?, pages = ?, quantity = ?, updated_at = ? where id = ?", e.Title, e.Author, e.Pages, e.Quantity, e.UpdatedAt.Format("2006-01-02"), e.ID)
 	if err != nil {
@@ -72,7 +72,7 @@ func (r *BookMySQL) Update(e *entity.Book) error {
 }
 
 //Search books
-func (r *BookMySQL) Search(query string) ([]*entity.Book, error) {
+func (r *BookPostgres) Search(query string) ([]*entity.Book, error) {
 	stmt, err := r.db.Prepare(`select id, title, author, pages, quantity, created_at from book where title like ?`)
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func (r *BookMySQL) Search(query string) ([]*entity.Book, error) {
 }
 
 //List books
-func (r *BookMySQL) List() ([]*entity.Book, error) {
+func (r *BookPostgres) List() ([]*entity.Book, error) {
 	stmt, err := r.db.Prepare(`select id, title, author, pages, quantity, created_at from book`)
 	if err != nil {
 		return nil, err
@@ -117,7 +117,7 @@ func (r *BookMySQL) List() ([]*entity.Book, error) {
 }
 
 //Delete a book
-func (r *BookMySQL) Delete(id entity.ID) error {
+func (r *BookPostgres) Delete(id entity.ID) error {
 	_, err := r.db.Exec("delete from book where id = ?", id)
 	if err != nil {
 		return err

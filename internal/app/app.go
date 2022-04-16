@@ -34,10 +34,10 @@ func Run(cfg *config.Config) {
 	defer db.Close()
 
 	// repository
-	bookRepo := repository.NewBookMySQL(db)
+	bookRepo := repository.NewBookPostgres(db)
 	bookService := book.NewService(bookRepo)
 
-	userRepo := repository.NewUserMySQL(db)
+	userRepo := repository.NewUserPostgres(db)
 	userService := user.NewService(userRepo)
 
 	loanUseCase := loan.NewService(userService, bookService)

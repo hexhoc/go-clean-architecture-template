@@ -7,20 +7,20 @@ import (
 	"time"
 )
 
-//UserMySQL mysql repo
-type UserMySQL struct {
+//UserPostgres mysql repo
+type UserPostgres struct {
 	db *sql.DB
 }
 
-//NewUserMySQL create new repository
-func NewUserMySQL(db *sql.DB) *UserMySQL {
-	return &UserMySQL{
+//NewUserPostgres create new repository
+func NewUserPostgres(db *sql.DB) *UserPostgres {
+	return &UserPostgres{
 		db: db,
 	}
 }
 
 //Create an user
-func (r *UserMySQL) Create(e *entity.User) (entity.ID, error) {
+func (r *UserPostgres) Create(e *entity.User) (entity.ID, error) {
 	stmt, err := r.db.Prepare(`
 		insert into user (id, email, password, first_name, last_name, created_at) 
 		values(?,?,?,?,?,?)`)
@@ -46,7 +46,7 @@ func (r *UserMySQL) Create(e *entity.User) (entity.ID, error) {
 }
 
 //Get an user
-func (r *UserMySQL) Get(id entity.ID) (*entity.User, error) {
+func (r *UserPostgres) Get(id entity.ID) (*entity.User, error) {
 	return getUser(id, r.db)
 }
 
@@ -80,7 +80,7 @@ func getUser(id entity.ID, db *sql.DB) (*entity.User, error) {
 }
 
 //Update an user
-func (r *UserMySQL) Update(e *entity.User) error {
+func (r *UserPostgres) Update(e *entity.User) error {
 	e.UpdatedAt = time.Now()
 	_, err := r.db.Exec("update user set email = ?, password = ?, first_name = ?, last_name = ?, updated_at = ? where id = ?", e.Email, e.Password, e.FirstName, e.LastName, e.UpdatedAt.Format("2006-01-02"), e.ID)
 	if err != nil {
@@ -100,7 +100,7 @@ func (r *UserMySQL) Update(e *entity.User) error {
 }
 
 //Search users
-func (r *UserMySQL) Search(query string) ([]*entity.User, error) {
+func (r *UserPostgres) Search(query string) ([]*entity.User, error) {
 	stmt, err := r.db.Prepare(`select id from user where name like ?`)
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (r *UserMySQL) Search(query string) ([]*entity.User, error) {
 }
 
 //List users
-func (r *UserMySQL) List() ([]*entity.User, error) {
+func (r *UserPostgres) List() ([]*entity.User, error) {
 	stmt, err := r.db.Prepare(`select id from user`)
 	if err != nil {
 		return nil, err
@@ -168,7 +168,7 @@ func (r *UserMySQL) List() ([]*entity.User, error) {
 }
 
 //Delete an user
-func (r *UserMySQL) Delete(id entity.ID) error {
+func (r *UserPostgres) Delete(id entity.ID) error {
 	_, err := r.db.Exec("delete from user where id = ?", id)
 	if err != nil {
 		return err
