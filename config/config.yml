@@ -1,5 +1,5 @@
 app:
-  name: 'go-clean-template'
+  name: 'go-mall-api'
   version: '1.0.0'
 
 http:
@@ -9,3 +9,15 @@ http:
 logger:
   log_level: 'debug'
   rollbar_env: 'go-clean-template'
+
+datasource:
+  pg:
+    username: 'postgres'
+    password: 'postgres'
+    host: 'localhost'
+    port: '5432'
+    database: 'postgres'
+    sslmode: 'disable'
+
+prometheus:
+  gateway: 'http://localhost:9091/'

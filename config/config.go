@@ -7,9 +7,11 @@ import (
 
 type (
 	Config struct {
-		App  App
-		HTTP HTTP
-		Log  Log
+		App        App
+		HTTP       HTTP
+		Log        Log
+		Datasource Datasource
+		Prometheus Prometheus
 	}
 
 	App struct {
@@ -24,6 +26,19 @@ type (
 
 	Log struct {
 		Level string
+	}
+
+	Datasource struct {
+		Username string
+		Password string
+		Host     string
+		Port     string
+		Database string
+		Sslmode  string
+	}
+
+	Prometheus struct {
+		gateway string
 	}
 )
 
@@ -50,6 +65,19 @@ func NewConfig() (*Config, error) {
 
 	cfg.Log = Log{
 		viper.GetString("logger.log_level"),
+	}
+
+	cfg.Datasource = Datasource{
+		viper.GetString("datasource.pg.username"),
+		viper.GetString("datasource.pg.password"),
+		viper.GetString("datasource.pg.host"),
+		viper.GetString("datasource.pg.port"),
+		viper.GetString("datasource.pg.database"),
+		viper.GetString("datasource.pg.sslmode"),
+	}
+
+	cfg.Prometheus = Prometheus{
+		viper.GetString("prometheus.gateway"),
 	}
 
 	return cfg, nil
